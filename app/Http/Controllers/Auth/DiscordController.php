@@ -83,7 +83,7 @@ class DiscordController extends Controller
         $request->session()->regenerate();
         $this->audit->log('auth.discord_login', $user);
 
-        return redirect()->intended(route('dashboard'));
+        return redirect()->route('dashboard');
     }
 
     private function userIsInGuild(string $token, string $guildId): bool
