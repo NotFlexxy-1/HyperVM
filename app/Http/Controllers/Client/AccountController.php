@@ -24,9 +24,16 @@ class AccountController extends Controller
     {
         $user = $request->user();
 
+        $canManageApiKeys = $user->can('api.manage');
+
         return Inertia::render('Client/Account', [
-            'apiKeys' => $user->apiKeys()->latest()->get(['id', 'memo', 'identifier', 'permissions', 'allowed_ips', 'last_used_at', 'expires_at', 'created_at']),
-            'apiPermissions' => Permissions::grouped(),
+            'apiKeys' => $canManageApiKeys
+                ? $user->apiKeys()->latest()->get(['id', 'memo', 'identifier', 'permissions', 'allowed_ips', 'last_used_at', 'expires_at', 'created_at'])
+                : [],
+            'apiPermissions' => $canManageApiKeys
+                ? Permissions::grouped()
+                : [],
+            'canManageApiKeys' => $canManageApiKeys,
             'sessions' => DB::table('sessions')
                 ->where('user_id', $user->id)
                 ->orderByDesc('last_activity')
@@ -100,6 +107,8 @@ class AccountController extends Controller
 
     public function storeApiKey(Request $request): RedirectResponse
     {
+        abort_unless($request->user()->can('api.manage'), 403);
+
         $data = $request->validate([
             'memo' => ['required', 'string', 'max:120'],
             'permissions' => ['array'],
@@ -109,6 +118,18 @@ class AccountController extends Controller
             'expires_at' => ['nullable', 'date', 'after:now'],
         ]);
 
+        $requestedPermissions = array_values(array_unique($data['permissions'] ?? []));
+        $allowedPermissions = array_values(array_intersect(
+            Permissions::all(),
+            $requestedPermissions,
+        ));
+
+        if ($requestedPermissions !== $allowedPermissions) {
+            throw ValidationException::withMessages([
+                'permissions' => 'One or more requested API permissions are not allowed.',
+            ]);
+        }
+
         $identifier = Str::lower(Str::random(16));
         $secret = Str::random(48);
 
@@ -117,7 +138,7 @@ class AccountController extends Controller
             'memo' => $data['memo'],
             'identifier' => $identifier,
             'token_hash' => Hash::make($secret),
-            'permissions' => $data['permissions'] ?? [],
+            'permissions' => $allowedPermissions,
             'allowed_ips' => $data['allowed_ips'] ?? [],
             'expires_at' => $data['expires_at'] ?? null,
         ]);
@@ -129,6 +150,7 @@ class AccountController extends Controller
 
     public function destroyApiKey(Request $request, ApiKey $apiKey): RedirectResponse
     {
+        abort_unless($request->user()->can('api.manage'), 403);
         abort_unless($apiKey->user_id === $request->user()->id, 403);
 
         $apiKey->delete();

@@ -30,6 +30,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role' => Spatie\Permission\Middleware\RoleMiddleware::class,
             'registration.enabled' => EnsureRegistrationIsEnabled::class,
+            'hypervm.api' => \App\Http\Middleware\AuthenticateApiKey::class,
+            'hypervm.api.permission' => \App\Http\Middleware\RequireApiKeyPermission::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

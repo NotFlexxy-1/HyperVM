@@ -13,7 +13,7 @@ const when = (value?: string | number | null) => {
     return Number.isNaN(date.getTime()) ? '—' : date.toLocaleString();
 };
 
-export default function Account({ apiKeys, apiPermissions, sessions, activity, security }: any) {
+export default function Account({ apiKeys, apiPermissions, sessions, activity, security, canManageApiKeys }: any) {
     const { props } = usePage<PageProps>();
     const user = props.auth.user!;
     const panelName = props.settings.branding.panel_name;
@@ -184,40 +184,42 @@ export default function Account({ apiKeys, apiPermissions, sessions, activity, s
                 </Card>
             </div>
 
-            <div className="mt-6">
-                <Card
-                    title="API keys"
-                    subtitle="Programmatic access to the HyperVM application API"
-                    action={
-                        <button className="hv-btn-primary py-1.5" onClick={() => setKeyOpen(true)}>
-                            <KeyRound className="h-4 w-4" /> Create key
-                        </button>
-                    }
-                >
-                    <Table head={['Memo', 'Identifier', 'Scopes', 'Last used', 'Expires', '']} empty={apiKeys.length ? undefined : <p className="px-4 py-6 text-sm text-ink-muted">You have not created any API keys.</p>}>
-                        {apiKeys.map((key: any) => (
-                            <tr key={key.id}>
-                                <td className="px-4 py-3 font-medium text-ink">{key.memo}</td>
-                                <td className="px-4 py-3 font-mono text-xs text-ink-muted">hypervm_{key.identifier}</td>
-                                <td className="px-4 py-3"><Badge tone="brand">{(key.permissions ?? []).length}</Badge></td>
-                                <td className="px-4 py-3 text-ink-muted">{when(key.last_used_at)}</td>
-                                <td className="px-4 py-3 text-ink-muted">{key.expires_at ? when(key.expires_at) : 'never'}</td>
-                                <td className="px-4 py-3 text-right">
-                                    <ConfirmButton
-                                        className="hv-btn-danger py-1.5"
-                                        title="Revoke this API key?"
-                                        body="Any integration using this key stops working immediately."
-                                        confirmLabel="Revoke"
-                                        onConfirm={() => router.delete(`/account/api-keys/${key.id}`, { preserveScroll: true })}
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                    </ConfirmButton>
-                                </td>
-                            </tr>
-                        ))}
-                    </Table>
-                </Card>
-            </div>
+            {canManageApiKeys && (
+                <div className="mt-6">
+                    <Card
+                        title="API keys"
+                        subtitle="Programmatic access to the HyperVM application API"
+                        action={
+                            <button className="hv-btn-primary py-1.5" onClick={() => setKeyOpen(true)}>
+                                <KeyRound className="h-4 w-4" /> Create key
+                            </button>
+                        }
+                    >
+                        <Table head={['Memo', 'Identifier', 'Scopes', 'Last used', 'Expires', '']} empty={apiKeys.length ? undefined : <p className="px-4 py-6 text-sm text-ink-muted">You have not created any API keys.</p>}>
+                            {apiKeys.map((key: any) => (
+                                <tr key={key.id}>
+                                    <td className="px-4 py-3 font-medium text-ink">{key.memo}</td>
+                                    <td className="px-4 py-3 font-mono text-xs text-ink-muted">hypervm_{key.identifier}</td>
+                                    <td className="px-4 py-3"><Badge tone="brand">{(key.permissions ?? []).length}</Badge></td>
+                                    <td className="px-4 py-3 text-ink-muted">{when(key.last_used_at)}</td>
+                                    <td className="px-4 py-3 text-ink-muted">{key.expires_at ? when(key.expires_at) : 'never'}</td>
+                                    <td className="px-4 py-3 text-right">
+                                        <ConfirmButton
+                                            className="hv-btn-danger py-1.5"
+                                            title="Revoke this API key?"
+                                            body="Any integration using this key stops working immediately."
+                                            confirmLabel="Revoke"
+                                            onConfirm={() => router.delete(`/account/api-keys/${key.id}`, { preserveScroll: true })}
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </ConfirmButton>
+                                    </td>
+                                </tr>
+                            ))}
+                        </Table>
+                    </Card>
+                </div>
+            )}
 
             <div className="mt-6 grid gap-6 lg:grid-cols-2">
                 <Card title="Active sessions" subtitle="Browsers currently signed in to your account">
@@ -272,7 +274,7 @@ export default function Account({ apiKeys, apiPermissions, sessions, activity, s
             </div>
 
             <Modal
-                open={keyOpen}
+                open={canManageApiKeys && keyOpen}
                 onClose={() => setKeyOpen(false)}
                 title="Create an API key"
                 width="max-w-2xl"
