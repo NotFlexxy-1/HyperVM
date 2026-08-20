@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --hv-surface: 248 250 252;
+        --hv-surface-raised: 255 255 255;
+        --hv-surface-sunken: 241 245 249;
+        --hv-border: 226 232 240;
+        --hv-text: 15 23 42;
+        --hv-text-muted: 100 116 139;
+    }
+
+    .dark {
+        --hv-surface: 8 11 20;
+        --hv-surface-raised: 17 22 36;
+        --hv-surface-sunken: 12 16 27;
+        --hv-border: 34 42 62;
+        --hv-text: 233 238 248;
+        --hv-text-muted: 148 163 184;
+    }
+
+    body {
+        background-image:
+            radial-gradient(900px 520px at 12% -10%, rgb(var(--hv-brand) / 0.16), transparent 60%),
+            radial-gradient(700px 420px at 92% 0%, rgb(var(--hv-accent) / 0.12), transparent 55%);
+        background-attachment: fixed;
+    }
+
+    ::selection { background: rgb(var(--hv-brand) / 0.35); }
+}
+
+@layer components {
+    .hv-card {
+        @apply rounded-panel border border-edge/70 bg-surface-raised/80 backdrop-blur-xl shadow-[0_1px_0_0_rgb(255_255_255/0.04)_inset];
+    }
+    .hv-card-glow { @apply hv-card shadow-glow; }
+    .hv-btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-panel px-4 py-2 text-sm font-semibold transition
+               focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/60 disabled:opacity-50;
+    }
+    .hv-btn-primary { @apply hv-btn bg-brand text-brand-contrast hover:bg-brand-soft; }
+    .hv-btn-ghost { @apply hv-btn border border-edge text-ink hover:bg-surface-sunken; }
+    .hv-btn-danger { @apply hv-btn bg-red-500/90 text-white hover:bg-red-500; }
+    .hv-input {
+        @apply w-full rounded-panel border-edge bg-surface-sunken/70 px-3 py-2 text-sm text-ink
+               placeholder:text-ink-muted focus:border-brand focus:ring-brand;
+    }
+    .hv-label { @apply mb-1.5 block text-xs font-semibold uppercase tracking-wider text-ink-muted; }
+    .hv-chip { @apply inline-flex items-center gap-1.5 rounded-full border border-edge px-2.5 py-1 text-xs font-medium text-ink-muted; }
+    .density-compact .hv-density { @apply p-3; }
+    .density-comfortable .hv-density { @apply p-5; }
+    .density-spacious .hv-density { @apply p-8; }
+}

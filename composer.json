@@ -1,0 +1,70 @@
+{
+    "name": "hypervm/panel",
+    "type": "project",
+    "description": "HyperVM - a Proxmox VE virtualisation management panel.",
+    "keywords": [
+        "hypervm",
+        "proxmox",
+        "vps",
+        "panel",
+        "laravel"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^7.8",
+        "inertiajs/inertia-laravel": "^1.0",
+        "laravel/framework": "^11.9",
+        "laravel/sanctum": "^4.0",
+        "laravel/socialite": "^5.14",
+        "laravel/tinker": "^2.9",
+        "socialiteproviders/discord": "^4.2",
+        "spatie/laravel-permission": "^6.7",
+        "tightenco/ziggy": "^2.1"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.23",
+        "laravel/pint": "^1.15",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.1",
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-create-project-cmd": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php artisan key:generate --ansi"
+        ],
+        "test": [
+            "@php artisan config:clear --ansi",
+            "@php vendor/bin/phpunit"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
