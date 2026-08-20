@@ -14,7 +14,7 @@ Every hypervisor operation talks to the real Proxmox VE API — nothing is mocke
 ## Install
 
 ```bash
-git clone <your-repo> /var/www/hypervm && cd /var/www/hypervm
+git clone https://github.com/NotFlexxy-1/hyperVM /var/www/hypervm && cd /var/www/hypervm
 
 composer install --no-dev --optimize-autoloader
 npm install && npm run build
