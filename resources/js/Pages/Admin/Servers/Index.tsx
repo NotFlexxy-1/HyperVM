@@ -7,7 +7,7 @@ export default function ServersIndex({ servers, filters }: any) {
     return (
         <AppLayout title="Servers">
             <Head title="Servers" />
-            <Card title="All virtual machines" action={<Link className="hv-btn-primary py-1.5" href="/admin/servers-new">Provision server</Link>}>
+            <Card title="All virtual machines" action={<Link className="hv-btn-primary py-1.5" href="/admin/servers/create">Provision server</Link>}>
                 <input defaultValue={filters.search ?? ''} placeholder="Search name, UUID or VMID…" className="hv-input mb-4 max-w-sm"
                     onKeyDown={(e) => e.key === 'Enter' && router.get('/admin/servers', { search: (e.target as HTMLInputElement).value }, { preserveState: true })} />
                 <table className="w-full text-left text-sm">

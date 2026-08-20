@@ -6,7 +6,7 @@ export default function NodesIndex({ nodes }: any) {
     return (
         <AppLayout title="Nodes">
             <Head title="Nodes" />
-            <Card title="Proxmox nodes" action={<Link className="hv-btn-primary py-1.5" href="/admin/nodes-new">Add node</Link>}>
+            <Card title="Proxmox nodes" action={<Link className="hv-btn-primary py-1.5" href="/admin/nodes/create">Add node</Link>}>
                 <table className="w-full text-left text-sm">
                     <thead className="text-xs uppercase tracking-wider text-ink-muted"><tr><th className="pb-2">Name</th><th>FQDN</th><th>PVE node</th><th>Servers</th><th>State</th></tr></thead>
                     <tbody className="divide-y divide-edge/50">

@@ -42,7 +42,7 @@ export default function AdminDashboard({ stats, capacity, recentServers, recentA
                                     </div>
                                 ))}
                                 {capacity.length === 0 && (
-                                    <p className="text-sm text-ink-muted">No nodes yet — <Link className="text-brand" href="/admin/nodes-new">connect a Proxmox node</Link>.</p>
+                                    <p className="text-sm text-ink-muted">No nodes yet — <Link className="text-brand" href="/admin/nodes/create">connect a Proxmox node</Link>.</p>
                                 )}
                             </div>
                         </Card>
@@ -67,7 +67,7 @@ export default function AdminDashboard({ stats, capacity, recentServers, recentA
 
                 {enabled('server-list') && (
                     <div className={span(width('server-list'))}>
-                        <Card title="Newest servers" action={<Link className="hv-btn-primary py-1.5" href="/admin/servers-new">Provision</Link>}>
+                        <Card title="Newest servers" action={<Link className="hv-btn-primary py-1.5" href="/admin/servers/create">Provision</Link>}>
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left text-sm">
                                     <thead className="text-xs uppercase tracking-wider text-ink-muted">
