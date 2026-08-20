@@ -11,8 +11,9 @@ class SettingsServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        Event::listen(function (SocialiteWasCalled $event) {
-            $event->extendSocialite('discord', DiscordExtendSocialite::class);
-        });
+        Event::listen(
+            SocialiteWasCalled::class,
+            DiscordExtendSocialite::class
+        );
     }
 }
